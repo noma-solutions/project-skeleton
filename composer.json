@@ -1,8 +1,8 @@
 {
-  "name": "symfony/skeleton",
+  "name": "noma-solutions/project-skeleton",
   "type": "project",
   "license": "MIT",
-  "description": "A minimal Symfony project recommended to create bare bones applications",
+  "description": "Basic project based on Symfony 4.4 with some additional libraries and Docker",
   "require": {
     "php": "^7.1.3",
     "ext-ctype": "*",
