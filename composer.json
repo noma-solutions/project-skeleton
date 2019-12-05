@@ -30,7 +30,8 @@
     "symfony/templating": "4.4.*",
     "symfony/translation": "4.4.*",
     "symfony/twig-bundle": "4.4.*",
-    "symfony/validator": "4.4.*"
+    "symfony/validator": "4.4.*",
+    "consolidation/robo": "^1.0.0"
   },
   "flex-require": {
     "symfony/console": "*",
@@ -72,9 +73,11 @@
     "auto-scripts": [
     ],
     "post-install-cmd": [
+      "bin/fix-project-dir.sh",
       "@auto-scripts"
     ],
     "post-update-cmd": [
+      "bin/fix-project-dir.sh",
       "@auto-scripts"
     ]
   },
