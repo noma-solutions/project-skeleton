@@ -39,6 +39,10 @@
     "symfony/yaml": "*"
   },
   "require-dev": {
+    "symfony/maker-bundle": "^1.11",
+    "symfony/phpunit-bridge": "4.2.*",
+    "symfony/profiler-pack": "^1.0",
+    "symfony/var-dumper": "4.2.*"
   },
   "config": {
     "preferred-install": {
@@ -48,7 +52,7 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/"
+      "App\\": "src/backend"
     }
   },
   "autoload-dev": {
