@@ -12,6 +12,7 @@ Out of the box it contains:
 - Additional composer packages
 - PHP Source placed in `src/backend`
 - Source divided into 3 layers (Application, Domain, Infrastructure)
+- Automated tasks based on [Robo](http://robo.li)
 - Docker configuration for development environment
 - Deployment scripts based on Ansible
 
