@@ -53,12 +53,12 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/backend"
+      "\\": "src/backend"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "App\\Tests\\": "tests/"
+      "\\": "tests/backend"
     }
   },
   "replace": {
@@ -74,10 +74,10 @@
     ],
     "post-install-cmd": [
       "bin/fix-project-dir.sh",
-      "@auto-scripts"
+      "@auto-scripts",
+      "vendor/bin/robo init"
     ],
     "post-update-cmd": [
-      "bin/fix-project-dir.sh",
       "@auto-scripts"
     ]
   },

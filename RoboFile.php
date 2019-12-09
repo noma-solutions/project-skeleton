@@ -34,7 +34,19 @@ class RoboFile extends Tasks
      */
     public function init()
     {
+        if ($this->config['initialized'] ?? false) {
+            if ($this->askDefault('Project already initialized. Are you sure you want to run init again? [y/N]', 'n') !== 'y') {
+                return;
+            }
+        }
+
+        $this->config['initialized'] = true;
+
         $this->createProjectConfiguration();
+        $this->createDirectories();
+        $this->initTemplateFiles();
+        $this->replaceContents();
+        $this->removeFilesAndDirs();
     }
 
     public function createProjectConfiguration()
@@ -48,7 +60,7 @@ class RoboFile extends Tasks
             $this->config['name'] = $name;
         }
 
-        $nameDash =  $this->config['name-dash']  ?? null;
+        $nameDash = $this->config['name-dash'] ?? null;
         if (!$nameDash) {
             $nameDash = $this->createNameDash($name);
             $this->config['name-dash'] = $nameDash;
@@ -117,6 +129,100 @@ class RoboFile extends Tasks
                 'namespace' => null,
                 'skeleton' => [],
             ];
+        }
+    }
+
+    private function replaceConfigVariables($text)
+    {
+        $numberInt = (int) str_replace('ns', '', $this->config['number']);
+
+        return str_replace([
+            "[namespace]",
+            "[name]",
+            "[name-dash]",
+            "[number-int]",
+            "[number]"
+        ], [
+            $this->config['namespace'],
+            $this->config['name'],
+            $this->config['name-dash'],
+            $numberInt,
+            $this->config['number'],
+        ], $text);
+    }
+
+    private function removeFilesAndDirs()
+    {
+        $directories = $this->config['skeleton']['remove'] ?? [];
+
+        $task = $this->taskFilesystemStack();
+
+        foreach ($directories as $directory) {
+            $directory = $this->projectPath . DIRECTORY_SEPARATOR . $this->replaceConfigVariables($directory);
+
+            if (file_exists($directory))  {
+                $task->remove($directory);
+            }
+        }
+
+        $task->run();
+    }
+
+    private function createDirectories()
+    {
+        $directories = $this->config['skeleton']['directories'] ?? [];
+
+        $task = $this->taskFilesystemStack();
+
+        foreach ($directories as $directory) {
+            $directory = $this->projectPath . DIRECTORY_SEPARATOR . $this->replaceConfigVariables($directory);
+
+            if (!file_exists($directory))  {
+                $task->mkdir($directory)
+                    ->touch($directory . DIRECTORY_SEPARATOR . '.gitkeep');
+            }
+
+        }
+
+        $task->run();
+    }
+
+    private function initTemplateFiles()
+    {
+        $templateFiles = $this->config['skeleton']['template-files'] ?? [];
+
+        foreach ($templateFiles as $file) {
+            $srcPath = $this->projectPath . DIRECTORY_SEPARATOR . $file['template'];
+            $force = $file['force'] ?? false;
+
+            if (file_exists($srcPath)) {
+                $contents = file_get_contents($srcPath);
+                $contents = $this->replaceConfigVariables($contents);
+                $destPath = $this->projectPath . DIRECTORY_SEPARATOR . $file['dest'];
+                $destPath = $this->replaceConfigVariables($destPath);
+
+                if (!file_exists($destPath) || $force) {
+                    $this->taskWriteToFile($destPath)
+                        ->text($contents)
+                        ->run();
+                }
+            }
+        }
+    }
+
+    private function replaceContents()
+    {
+        $replaces = $this->config['skeleton']['replace'] ?? [];
+
+        foreach ($replaces as $replace) {
+            $srcPath = $this->projectPath . DIRECTORY_SEPARATOR . $replace['src'];
+            $from = $replace['find'];
+            $to = $this->replaceConfigVariables($replace['replace']);
+
+            $this->taskReplaceInFile($srcPath)
+                ->from($from)
+                ->to($to)
+                ->run();
         }
     }
 

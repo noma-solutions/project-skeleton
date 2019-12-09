@@ -1,0 +1,95 @@
+{
+  "name": null,
+  "namespace": null,
+  "number": null,
+  "name-dash": null,
+  "skeleton": {
+    "template-files": [
+      {
+        "template": "skeleton\/docker\/docker-compose.yml",
+        "dest": "docker-compose.yml"
+      },
+      {
+        "template": "skeleton\/docker\/docker-compose.osx.yml",
+        "dest": "docker-compose.osx.yml"
+      },
+      {
+        "template": "skeleton\/main\/README.md",
+        "dest": "README.md"
+      },
+      {
+        "template": "skeleton\/main\/CHANGELOG.md",
+        "dest": "CHANGELOG.md"
+      },
+      {
+        "template": "skeleton\/main\/CONTRIBUTING.md",
+        "dest": "CONTRIBUTING.md"
+      },
+      {
+        "template": "skeleton\/main\/VERSION",
+        "dest": "VERSION"
+      },
+      {
+        "template": "skeleton\/php\/Kernel.php",
+        "dest": "src\/backend\/[namespace]\/Application\/Kernel.php"
+      },
+      {
+        "template": "skeleton\/config\/doctrine.yaml",
+        "dest": "config\/packages\/doctrine.yaml",
+        "force": true
+      }
+    ],
+    "directories": [
+      "config\/doctrine\/[name-dash]\/application",
+      "config\/doctrine\/[name-dash]\/domain",
+      "src\/backend\/[namespace]\/Application\/Cli",
+      "src\/backend\/[namespace]\/Application\/Controller\/Api",
+      "src\/backend\/[namespace]\/Application\/Controller\/App",
+      "src\/backend\/[namespace]\/Domain",
+      "src\/backend\/[namespace]\/Infrastructure\/Migrations",
+      "src\/backend\/[namespace]\/Infrastructure\/DataFixtures",
+      "tests\/backend",
+      "tests\/robot"
+    ],
+    "replace": [
+      {
+        "src": "bin\/console",
+        "find": "use App\\Kernel",
+        "replace": "use [namespace]\\Application\\Kernel"
+      },
+      {
+        "src": "public\/index.php",
+        "find": "use App\\Kernel",
+        "replace": "use [namespace]\\Application\\Kernel"
+      },
+      {
+        "src": "config\/services.yaml",
+        "find": "App\\:",
+        "replace": "[namespace]\\:"
+      },
+      {
+        "src": "config\/services.yaml",
+        "find": "App\\Controller\\:",
+        "replace": "[namespace]\\Appllication\\Controller\\:"
+      },
+      {
+        "src": "config\/services.yaml",
+        "find": "..\/src\/backend\/Controller",
+        "replace": "..\/src\/backend\/[namespace]\/Application\/Controller"
+      },
+      {
+        "src": "config\/services.yaml",
+        "find": "..\/src\/backend\/*",
+        "replace": "..\/src\/backend\/[namespace]\/*"
+      }
+    ],
+    "remove": [
+      "src\/backend\/DataFixtures",
+      "src\/backend\/Kernel.php",
+      "src\/backend\/Controller",
+      "src\/backend\/Entity",
+      "src\/backend\/Migrations",
+      "src\/backend\/Repository"
+    ]
+  }
+}
