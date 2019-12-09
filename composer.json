@@ -72,9 +72,8 @@
     "auto-scripts": [
     ],
     "post-install-cmd": [
-      "bin/fix-project-dir.sh",
-      "@auto-scripts",
-      "vendor/bin/robo init"
+      "vendor/bin/robo init",
+      "@auto-scripts"
     ],
     "post-update-cmd": [
       "@auto-scripts"
