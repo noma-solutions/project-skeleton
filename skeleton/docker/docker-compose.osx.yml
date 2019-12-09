@@ -2,17 +2,17 @@ version: "3.1"
 services:
   webserver:
     image: nginx:alpine
-    container_name: pif-webserver
+    container_name: [name-dash]-webserver
     working_dir: /application
     volumes:
       - nfsmount:/application
       - ./config/docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "11360:80"
+      - "[number-int]0:80"
 
   php-fpm:
     build: config/docker/php-fpm
-    container_name: pif-php-fpm
+    container_name: [name-dash]-php-fpm
     working_dir: /application
     volumes:
       - nfsmount:/application
@@ -20,74 +20,45 @@ services:
 
   mysql:
     image: mysql:5.7
-    container_name: pif-mysql
+    container_name: [name-dash]-mysql
     working_dir: /application
     volumes:
     - nfsmount:/application
     environment:
-    - MYSQL_ROOT_PASSWORD=pif
-    - MYSQL_DATABASE=pif
-    - MYSQL_USER=pif
-    - MYSQL_PASSWORD=pif
+    - MYSQL_ROOT_PASSWORD=[name-dash]
+    - MYSQL_DATABASE=[name-dash]
+    - MYSQL_USER=[name-dash]
+    - MYSQL_PASSWORD=[name-dash]
     ports:
-    - "11361:3306"
+    - "[number-int]1:3306"
 
   mysql_test:
     image: mysql:5.7
-    container_name: pif-mysql-test
+    container_name: [name-dash]-mysql-test
     working_dir: /application
     volumes:
       - nfsmount:/application
     environment:
-      - MYSQL_ROOT_PASSWORD=pif
-      - MYSQL_DATABASE=pif_test
-      - MYSQL_USER=pif
-      - MYSQL_PASSWORD=pif
+      - MYSQL_ROOT_PASSWORD=[name-dash]
+      - MYSQL_DATABASE=[name-dash]_test
+      - MYSQL_USER=[name-dash]
+      - MYSQL_PASSWORD=[name-dash]
     ports:
-      - "11367:3306"
-
-  mongodb:
-    image: 'bitnami/mongodb:latest'
-    container_name: pif-mongodb
-    labels:
-      kompose.service.type: nodeport
-    ports:
-    - "11362:27017"
-    environment:
-    - AUTH=no
-    - MONGODB_ROOT_PASSWORD=pif
-    - MONGODB_USERNAME=pif
-    - MONGODB_PASSWORD=pif
-    - MONGODB_DATABASE=pif
-    volumes:
-    - nfsmount:/application
-
-  rabbitmq:
-    build: config/docker/rabbitmq
-    container_name: pif-rabbit
-    working_dir: /application
-    ports:
-      - 11363:15672
-      - 11364:5672
-      - 11365:15674
-    volumes:
-      - nfsmount:/application
-      - ./config/docker/rabbitmq/rabbitmq.config:/etc/rabbitmq/rabbitmq.config
-      - ./config/docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - "[number-int]7:3306"
 
   robotfw:
     image: nomasolutions/robotfw:latest
-    container_name: pif-robotfw
+    container_name: [name-dash]-robotfw
     working_dir: /robot
     volumes:
       - ./tests/robot:/robot
 
   nodejs:
     build: ./config/docker/nodejs
-    container_name: pif-nodejs
+    container_name: [name-dash]-nodejs
     working_dir: /application
     ports:
-      - 11366:4200
+      - [number-int]6:4200
     volumes:
       - nfsmount:/application
 
@@ -97,4 +68,4 @@ volumes:
     driver_opts:
       type: nfs
       o: addr=host.docker.internal,rw,nolock,hard,nointr,nfsvers=3
-      device: ":/Users/${USER}/projekty/nomasolutions/ns01136"
+      device: ":/Users/${USER}/projekty/nomasolutions/ns0[number-int]"
