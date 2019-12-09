@@ -88,6 +88,11 @@
         "replace": "..\/src\/backend\/[namespace]\/*"
       },
       {
+        "src": "composer.json",
+        "find": "\"App\\\\\": \"src/backend\"",
+        "replace": "\"\": \"src/backend\""
+      },
+      {
         "src": "config\/services.yaml",
         "find": "..\/src\/Controller",
         "replace": "..\/src\/backend\/[namespace]\/Application\/Controller"

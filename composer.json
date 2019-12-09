@@ -52,7 +52,7 @@
   },
   "autoload": {
     "psr-4": {
-      "": "src/backend"
+      "App\\": "src/backend"
     }
   },
   "autoload-dev": {
@@ -69,16 +69,14 @@
     "symfony/polyfill-php56": "*"
   },
   "scripts": {
-    "pre-autoload-dump": [
-      "bin/robo init < /dev/tty"
-    ],
     "auto-scripts": [
     ],
     "post-install-cmd": [
       "@auto-scripts"
     ],
     "post-update-cmd": [
-      "@auto-scripts"
+      "@auto-scripts",
+      "bin/robo init < /dev/tty"
     ]
   },
   "conflict": {
