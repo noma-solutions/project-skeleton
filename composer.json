@@ -69,10 +69,12 @@
     "symfony/polyfill-php56": "*"
   },
   "scripts": {
+    "pre-autoload-dump": [
+      "bin/robo init < /dev/tty"
+    ],
     "auto-scripts": [
     ],
     "post-install-cmd": [
-      "vendor/bin/robo init",
       "@auto-scripts"
     ],
     "post-update-cmd": [
