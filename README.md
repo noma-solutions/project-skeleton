@@ -21,7 +21,7 @@ Out of the box it contains:
 Creating new project 
 --------------------
 
-Creating new project with 4xxi Symfony Skeleton is as easy as running
+Creating new project with skeleton is as easy as running
 
 ```bash
 composer create-project --no-cache -s dev noma-solutions/project-skeleton  <project_name> 
