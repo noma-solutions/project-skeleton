@@ -76,7 +76,7 @@
     ],
     "post-update-cmd": [
       "bin/robo init < /dev/tty",
-      "@auto-scripts",
+      "@auto-scripts"
     ]
   },
   "conflict": {
