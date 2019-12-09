@@ -47,6 +47,9 @@ class RoboFile extends Tasks
         $this->initTemplateFiles();
         $this->replaceContents();
         $this->removeFilesAndDirs();
+
+        $this->taskComposerDumpAutoload()
+            ->run();
     }
 
     public function createProjectConfiguration()
