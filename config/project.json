@@ -79,8 +79,28 @@
       },
       {
         "src": "config\/services.yaml",
+        "find": "../src/*",
+        "replace": "../src/backend/*"
+      },
+      {
+        "src": "config\/services.yaml",
         "find": "..\/src\/backend\/*",
         "replace": "..\/src\/backend\/[namespace]\/*"
+      },
+      {
+        "src": "config\/routes\/annotations.yaml",
+        "find": "../../src/Controller/",
+        "replace": "../../src/backend/[namespace]/Application/Controller/"
+      },
+      {
+        "src": "config/packages/doctrine_migrations.yaml",
+        "find": "%kernel.project_dir%/src/Migrations",
+        "replace": "%kernel.project_dir%/src/Backend/[namespace]/Infrastructure/Migrations"
+      },
+      {
+        "src": "config/packages/doctrine_migrations.yaml",
+        "find": "namespace: DoctrineMigrations",
+        "replace": "namespace: [namespace]\\Infrastructure\\Migrations"
       }
     ],
     "remove": [

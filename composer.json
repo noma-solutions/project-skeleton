@@ -30,8 +30,7 @@
     "symfony/templating": "4.4.*",
     "symfony/translation": "4.4.*",
     "symfony/twig-bundle": "4.4.*",
-    "symfony/validator": "4.4.*",
-    "consolidation/robo": "^1.0.0"
+    "symfony/validator": "4.4.*"
   },
   "flex-require": {
     "symfony/console": "*",
@@ -53,12 +52,12 @@
   },
   "autoload": {
     "psr-4": {
-      "\\": "src/backend"
+      "": "src/backend"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "\\": "tests/backend"
+      "": "tests/backend"
     }
   },
   "replace": {
