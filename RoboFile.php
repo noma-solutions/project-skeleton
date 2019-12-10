@@ -35,7 +35,10 @@ class RoboFile extends Tasks
     public function init()
     {
         if ($this->config['initialized'] ?? false) {
-            if ($this->askDefault('Project already initialized. Are you sure you want to run init again? [y/N]', 'n') !== 'y') {
+            if ($this->askDefault(
+                    'Project already initialized. Are you sure you want to run init again? [y/N]',
+                    'n'
+                ) !== 'y') {
                 return;
             }
         }
@@ -51,6 +54,49 @@ class RoboFile extends Tasks
         $this->taskComposerDumpAutoload()
             ->run();
     }
+
+    /**
+     * Generowanie kluczy OpenSSL dla JWT
+     */
+    function initJwt($env)
+    {
+        $publicKeyPath = $this->projectPath.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'jwt'.DIRECTORY_SEPARATOR.$env.DIRECTORY_SEPARATOR.'public.pem';
+        $privateKeyPath = $this->projectPath.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'jwt'.DIRECTORY_SEPARATOR.$env.DIRECTORY_SEPARATOR.'private.pem';
+
+        if (file_exists($privateKeyPath) === false) {
+            $this->say('Generowanie klucza JWT');
+
+            $this->taskExecStack()
+                ->stopOnFail()
+                ->exec('openssl genrsa -out data/jwt/private.pem -aes256 4096')
+                ->run();
+
+            $this->say(
+                'Proszę uzupełnić parametr jwt_key_pass_phrase w pliku app/config/parameters.yml zgodnie z ustawionym powyżej hasłem.'
+            );
+        } else {
+            $this->say('KLucz prywatny JWT już istnieje.');
+        }
+
+        if (file_exists($publicKeyPath) === false) {
+            $this->say('Generowanie klucza publicznego JWT');
+
+            $this->taskExecStack()
+                ->stopOnFail()
+                ->exec('openssl rsa -pubout -in data/jwt/private.pem -out data/jwt/public.pem')
+                ->run();
+
+            $this->say(
+                'Proszę uzupełnić parametr jwt_key_pass_phrase w pliku app/config/parameters.yml zgodnie z ustawionym powyżej hasłem.'
+            );
+        } else {
+            $this->say('KLucz publiczny JWT już istnieje.');
+        }
+
+        $this->taskFilesystemStack()->chmod($publicKeyPath, 0644)
+            ->chmod($privateKeyPath, 0644)->run();
+    }
+
 
     public function createProjectConfiguration()
     {
@@ -137,21 +183,25 @@ class RoboFile extends Tasks
 
     private function replaceConfigVariables($text)
     {
-        $numberInt = (int) str_replace('ns', '', $this->config['number']);
+        $numberInt = (int)str_replace('ns', '', $this->config['number']);
 
-        return str_replace([
-            "[namespace]",
-            "[name]",
-            "[name-dash]",
-            "[number-int]",
-            "[number]"
-        ], [
-            $this->config['namespace'],
-            $this->config['name'],
-            $this->config['name-dash'],
-            $numberInt,
-            $this->config['number'],
-        ], $text);
+        return str_replace(
+            [
+                "[namespace]",
+                "[name]",
+                "[name-dash]",
+                "[number-int]",
+                "[number]",
+            ],
+            [
+                $this->config['namespace'],
+                $this->config['name'],
+                $this->config['name-dash'],
+                $numberInt,
+                $this->config['number'],
+            ],
+            $text
+        );
     }
 
     private function removeFilesAndDirs()
@@ -161,9 +211,9 @@ class RoboFile extends Tasks
         $task = $this->taskFilesystemStack();
 
         foreach ($directories as $directory) {
-            $directory = $this->projectPath . DIRECTORY_SEPARATOR . $this->replaceConfigVariables($directory);
+            $directory = $this->projectPath.DIRECTORY_SEPARATOR.$this->replaceConfigVariables($directory);
 
-            if (file_exists($directory))  {
+            if (file_exists($directory)) {
                 $task->remove($directory);
             }
         }
@@ -178,11 +228,11 @@ class RoboFile extends Tasks
         $task = $this->taskFilesystemStack();
 
         foreach ($directories as $directory) {
-            $directory = $this->projectPath . DIRECTORY_SEPARATOR . $this->replaceConfigVariables($directory);
+            $directory = $this->projectPath.DIRECTORY_SEPARATOR.$this->replaceConfigVariables($directory);
 
-            if (!file_exists($directory))  {
+            if (!file_exists($directory)) {
                 $task->mkdir($directory)
-                    ->touch($directory . DIRECTORY_SEPARATOR . '.gitkeep');
+                    ->touch($directory.DIRECTORY_SEPARATOR.'.gitkeep');
             }
 
         }
@@ -195,13 +245,13 @@ class RoboFile extends Tasks
         $templateFiles = $this->config['skeleton']['template-files'] ?? [];
 
         foreach ($templateFiles as $file) {
-            $srcPath = $this->projectPath . DIRECTORY_SEPARATOR . $file['template'];
+            $srcPath = $this->projectPath.DIRECTORY_SEPARATOR.$file['template'];
             $force = $file['force'] ?? false;
 
             if (file_exists($srcPath)) {
                 $contents = file_get_contents($srcPath);
                 $contents = $this->replaceConfigVariables($contents);
-                $destPath = $this->projectPath . DIRECTORY_SEPARATOR . $file['dest'];
+                $destPath = $this->projectPath.DIRECTORY_SEPARATOR.$file['dest'];
                 $destPath = $this->replaceConfigVariables($destPath);
 
                 if (!file_exists($destPath) || $force) {
@@ -218,7 +268,7 @@ class RoboFile extends Tasks
         $replaces = $this->config['skeleton']['replace'] ?? [];
 
         foreach ($replaces as $replace) {
-            $srcPath = $this->projectPath . DIRECTORY_SEPARATOR . $replace['src'];
+            $srcPath = $this->projectPath.DIRECTORY_SEPARATOR.$replace['src'];
             $from = $replace['find'];
             $to = $this->replaceConfigVariables($replace['replace']);
 
