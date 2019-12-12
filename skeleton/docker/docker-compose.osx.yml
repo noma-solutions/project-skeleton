@@ -1,7 +1,7 @@
 version: "3.1"
 services:
   webserver:
-    image: nginx:alpine
+    build: config/docker/httpd
     container_name: [name-dash]-webserver
     working_dir: /application
     volumes:

@@ -70,7 +70,7 @@
       {
         "src": "config\/services.yaml",
         "find": "App\\Controller\\:",
-        "replace": "[namespace]\\Appllication\\Controller\\:"
+        "replace": "[namespace]\\Application\\Controller\\:"
       },
       {
         "src": "config\/services.yaml",
